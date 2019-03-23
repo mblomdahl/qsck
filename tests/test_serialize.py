@@ -57,3 +57,13 @@ def test_it_does_the_nested_key_value_formatting_on_root_level_tuple_values():
     qs_row = serialize(identifier, timestamp, key_value_pairs_with_none_values)
 
     assert 'nest3={"key31":bar,"key32":baz},nest4={"x":3},moarStuff=!' in qs_row
+
+
+def test_each_output_records_ends_with_newline():
+    identifier = 'FOO'
+    timestamp = datetime.utcnow()
+    some_key_value_pairs = [('theOnly', 'One')]
+
+    qs_row = serialize(identifier, timestamp, some_key_value_pairs)
+
+    assert qs_row.endswith(',theOnly=One\n')
