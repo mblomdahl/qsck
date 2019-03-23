@@ -16,3 +16,14 @@ def test_it_formats_identifier_and_timestamp_as_unix_epoch():
     qs_row = serialize(identifier, timestamp, some_key_value_pairs)
 
     assert qs_row.startswith("LOG,1553302923,It's Caturday?=")
+
+
+def test_it_formats_null_values_as_funky_strings():
+    identifier = 'LOG'
+    timestamp = datetime.utcnow()
+    key_value_pairs_with_none_values = [
+        ('good_ideas', None), ('bad ideas', 'plenty'), ('newType', None)]
+
+    qs_row = serialize(identifier, timestamp, key_value_pairs_with_none_values)
+
+    assert ',good_ideas=(null),bad ideas=plenty,newType=(null)' in qs_row
