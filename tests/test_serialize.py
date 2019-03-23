@@ -27,3 +27,18 @@ def test_it_formats_null_values_as_funky_strings():
     qs_row = serialize(identifier, timestamp, key_value_pairs_with_none_values)
 
     assert ',good_ideas=(null),bad ideas=plenty,newType=(null)' in qs_row
+
+
+def test_it_does_the_nested_key_value_formatting_on_root_level_list_values():
+    identifier = 'LOG'
+    timestamp = datetime.utcnow()
+    key_value_pairs_with_none_values = [
+        ('howdy', None),
+        ('my_nest', [('sub_key1', 'foo'), ('sk2', 'bar')]),
+        ('nest2', [('a', '1')]),
+        ('otherStuff', 'ok')
+    ]
+
+    qs_row = serialize(identifier, timestamp, key_value_pairs_with_none_values)
+
+    assert ',my_nest={sub_key1=foo, sk2=bar},nest2={a=1},otherStuff=' in qs_row
