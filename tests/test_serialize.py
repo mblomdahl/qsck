@@ -42,3 +42,18 @@ def test_it_does_the_nested_key_value_formatting_on_root_level_list_values():
     qs_row = serialize(identifier, timestamp, key_value_pairs_with_none_values)
 
     assert ',my_nest={sub_key1=foo, sk2=bar},nest2={a=1},otherStuff=' in qs_row
+
+
+def test_it_does_the_nested_key_value_formatting_on_root_level_tuple_values():
+    identifier = 'LOG'
+    timestamp = datetime.utcnow()
+    key_value_pairs_with_none_values = [
+        ('howdy', None),
+        ('nest3', (('key31', 'bar'), ('key32', 'baz'))),
+        ('nest4', (('x', '3'),)),
+        ('moarStuff', '!')
+    ]
+
+    qs_row = serialize(identifier, timestamp, key_value_pairs_with_none_values)
+
+    assert 'nest3={"key31":bar,"key32":baz},nest4={"x":3},moarStuff=!' in qs_row
