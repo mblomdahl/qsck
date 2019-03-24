@@ -39,7 +39,24 @@ the command-line tool `qs-format`, one record per line:
 Contributing
 ------------
 
-Really? Very welcome. Do the usual fork-and-submit-PR thingy. Running the tests:
+Really? Very welcome. Do the usual fork-and-submit-PR thingy.
+
+Running the tests:
 
     python setup.py test
+
+
+Distributing:
+
+    pip3 install --upgrade twine wheel setuptools
+    python setup.py sdist bdist_wheel
+    twine upload dist/*
+
+
+Changelog
+---------
+
+### 0.1 – Initial Release
+
+Supports serializing ".qs" records.
 
