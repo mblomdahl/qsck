@@ -30,6 +30,7 @@ def test_it_parses_nested_list_content():
     qs_row = (
         'LOG,1546902289,_model=LG-M327,'
         'event0_vars={subtype=disconnected},'
+        'event1_vars={},'
         'event10_vars={batteryPct=0.79, isCharging=false, subtype=connected, '
         'batteryTemp=310, chargeType=Not_Charging},'
         'event11_data=BATTERY_CHANGED,'
@@ -45,6 +46,7 @@ def test_it_parses_nested_list_content():
         assert key_value_pairs == [
             ('_model', 'LG-M327'),
             ('event0_vars', [('subtype', 'disconnected')]),
+            ('event1_vars', []),
             ('event10_vars', [('batteryPct', '0.79'),
                               ('isCharging', 'false'),
                               ('subtype', 'connected'),
