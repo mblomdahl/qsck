@@ -13,7 +13,7 @@ def _read_files_from_root_dir(*file_basenames: [str]) -> str:
 
 setup(
     name='qsck',
-    version='0.1',
+    version='0.2',
     packages=find_packages(include=('qsck',)),
     url='https://github.com/mblomdahl/qsck',
     license='The Unlicense',
@@ -24,7 +24,7 @@ setup(
     long_description_content_type='text/markdown',
     entry_points={
         'console_scripts': [
-            'qs-parse = qsck.parse_cli:run',
+            'qs-parse = qsck.parse_cli:qs_parse',
             'qs-format = qsck.format_cli:qs_format'
         ]
     },
