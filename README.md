@@ -5,7 +5,9 @@ qsck
 Python library for serializing and deserializing a wonky format referred to
 as ".qs" files. For full format specification, please read through
 [tests.test_serialize](https://github.com/mblomdahl/qsck/blob/master/tests/test_serialize.py)
-test suite and extrapolate.
+and
+[tests.test_deserialize](https://github.com/mblomdahl/qsck/blob/master/tests/test_deserialize.py)
+test suites and extrapolate.
 
 
 Quick Start
