@@ -45,6 +45,21 @@ def test_it_rejects_future_and_far_past_and_mistyped_timestamps():
         serialize(identifier, mistyped_timestamp, [])
 
 
+def test_it_rejects_malformatted_and_mistyped_key_value_pairs():
+    identifier = 'LOG'
+    timestamp = datetime.utcnow()
+
+    malformatted_key_value_pairs = [('hey', 'you'), ("i'm", "one", "too many")]
+
+    with raises(ValueError):
+        serialize(identifier, timestamp, malformatted_key_value_pairs)
+
+    mistyped_key_value_pair = [("here's a boolean", False)]
+
+    with raises(TypeError):
+        serialize(identifier, timestamp, mistyped_key_value_pair)
+
+
 def test_it_formats_null_values_as_funky_strings():
     identifier = 'LOG'
     timestamp = datetime.utcnow()
