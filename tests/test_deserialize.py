@@ -38,19 +38,48 @@ def test_it_parses_nested_list_content():
         '_rx_host=ip-10-0-1-215'
     )
 
-    _, __, key_value_pairs = deserialize(qs_row)
+    _, __, key_value_pairs_run1 = deserialize(qs_row)
+    _, __, key_value_pairs_run2 = deserialize(qs_row)
 
-    assert key_value_pairs == [
-        ('_model', 'LG-M327'),
-        ("event0_vars", [("subtype", "disconnected")]),
-        ("event10_vars", [("batteryPct", "0.79"),
-                          ("isCharging", "false"),
-                          ("subtype", "connected"),
-                          ("batteryTemp", "310"),
-                          ("chargeType", "Not_Charging")]),
-        ("event11_data", "BATTERY_CHANGED"),
-        ("event11_time", "1546901849405"),
-        ("event11_vars", [("batteryPct", "0.78"),
-                          ("batteryTemp", "308")]),
-        ("_rx_host", "ip-10-0-1-215")
-    ]
+    for key_value_pairs in [key_value_pairs_run1, key_value_pairs_run2]:
+        assert key_value_pairs == [
+            ('_model', 'LG-M327'),
+            ('event0_vars', [('subtype', 'disconnected')]),
+            ('event10_vars', [('batteryPct', '0.79'),
+                              ('isCharging', 'false'),
+                              ('subtype', 'connected'),
+                              ('batteryTemp', '310'),
+                              ('chargeType', 'Not_Charging')]),
+            ('event11_data', 'BATTERY_CHANGED'),
+            ('event11_time', '1546901849405'),
+            ('event11_vars', [('batteryPct', '0.78'),
+                              ('batteryTemp', '308')]),
+            ('_rx_host', 'ip-10-0-1-215')
+        ]
+
+
+def test_it_parses_nested_dict_content():
+    qs_row = (
+        'LOG,1546902289,user=jenkins,'
+        'info_healthData={"battery_max":0.89,"battery_max_at":1546898400064,'
+        '"battery_min":0.78,"battery_min_at":1546901880022,'
+        '"time_charging":0,"time_discharging":60},'
+        'info_runData={"app_install_time":1545251927594},'
+        'time=1546902289176'
+    )
+
+    _, __, key_value_pairs_run1 = deserialize(qs_row)
+    _, __, key_value_pairs_run2 = deserialize(qs_row)
+
+    for key_value_pairs in [key_value_pairs_run1, key_value_pairs_run2]:
+        assert key_value_pairs == [
+            ('user', 'jenkins'),
+            ('info_healthData', {"battery_max": 0.89,
+                                 "battery_max_at": 1546898400064,
+                                 "battery_min": 0.78,
+                                 "battery_min_at": 1546901880022,
+                                 "time_charging": 0,
+                                 "time_discharging": 60}),
+            ('info_runData', {"app_install_time": 1545251927594}),
+            ('time', '1546902289176')
+        ]
