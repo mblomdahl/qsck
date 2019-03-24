@@ -9,7 +9,8 @@ from datetime import datetime
 
 import ujson
 
-from .util import _validate_and_cast_timestamp_to_epoch_str
+from .util import (_validate_and_cast_timestamp_to_epoch_str,
+                   _reconstruct_key_value_pairs)
 
 
 def serialize(identifier: str, timestamp, key_value_pairs: []) -> str:
@@ -46,4 +47,12 @@ def deserialize(qs_row: str) -> (str, datetime, []):
     """Parse `qs_row`, return as a identifier-timestamp-key_value_pairs 3-tuple.
     """
 
-    raise NotImplemented
+    input_components = qs_row.rstrip().split(',')
+    if len(input_components) < 3:
+        raise AssertionError(f'Malformatted input row {qs_row!r}')
+
+    identifier, timestamp = input_components[:2]
+
+    key_value_thingies = _reconstruct_key_value_pairs(input_components[2:])
+
+    return identifier, timestamp, key_value_thingies
