@@ -1,6 +1,8 @@
 
 from datetime import datetime, timezone
 
+from pytest import raises
+
 from qsck import serialize
 
 
@@ -10,12 +12,36 @@ def test_serialize_is_a_function():
 
 def test_it_formats_identifier_and_timestamp_as_unix_epoch():
     identifier = 'LOG'
-    timestamp = datetime(2019, 3, 23, 1, 2, 3, tzinfo=timezone.utc)
     some_key_value_pairs = [("It's Caturday?", 'YES')]
 
-    qs_row = serialize(identifier, timestamp, some_key_value_pairs)
+    dt_timestamp = datetime(2019, 3, 23, 1, 2, 3, tzinfo=timezone.utc)
+    str_timestamp = "1553302923"
+    int_timestamp = int(str_timestamp)
 
-    assert qs_row.startswith("LOG,1553302923,It's Caturday?=")
+    for timestamp in (dt_timestamp, str_timestamp, int_timestamp):
+        qs_row = serialize(identifier, timestamp, some_key_value_pairs)
+
+        assert qs_row.startswith("LOG,1553302923,It's Caturday?=")
+
+
+def test_it_rejects_future_and_far_past_and_mistyped_timestamps():
+    identifier = 'GOL'
+
+    far_past_timestamp = datetime(1999, 12, 31, 0, 0, 0, tzinfo=timezone.utc)
+    with raises(AssertionError):
+        serialize(identifier, far_past_timestamp, [])
+
+    future_timestamp = int(datetime.utcnow().timestamp() + 30)
+    with raises(AssertionError):
+        serialize(identifier, future_timestamp, [])
+
+    text_timestamp = 'First day of April, 2015'
+    with raises(ValueError):
+        serialize(identifier, text_timestamp, [])
+
+    mistyped_timestamp = [2019, 1, 3, 16, 1, 30]
+    with raises(TypeError):
+        serialize(identifier, mistyped_timestamp, [])
 
 
 def test_it_formats_null_values_as_funky_strings():
