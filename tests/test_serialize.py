@@ -1,4 +1,5 @@
 
+from collections import OrderedDict
 from datetime import datetime, timezone
 
 from pytest import raises
@@ -58,31 +59,31 @@ def test_it_formats_null_values_as_funky_strings():
 def test_it_does_the_nested_key_value_formatting_on_root_level_list_values():
     identifier = 'LOG'
     timestamp = datetime.utcnow()
-    key_value_pairs_with_none_values = [
+    key_value_pairs_with_list_values = [
         ('howdy', None),
         ('my_nest', [('sub_key1', 'foo'), ('sk2', 'bar')]),
         ('nest2', [('a', '1')]),
         ('otherStuff', 'ok')
     ]
 
-    qs_row = serialize(identifier, timestamp, key_value_pairs_with_none_values)
+    qs_row = serialize(identifier, timestamp, key_value_pairs_with_list_values)
 
     assert ',my_nest={sub_key1=foo, sk2=bar},nest2={a=1},otherStuff=' in qs_row
 
 
-def test_it_does_the_nested_key_value_formatting_on_root_level_tuple_values():
+def test_it_does_the_nested_key_value_formatting_on_root_level_dict_values():
     identifier = 'LOG'
     timestamp = datetime.utcnow()
-    key_value_pairs_with_none_values = [
+    key_value_pairs_with_dict_values = [
         ('howdy', None),
-        ('nest3', (('key31', 'bar'), ('key32', 'baz'))),
-        ('nest4', (('x', '3'),)),
+        ('nest3', OrderedDict([('key31', 2.0), ('key32', 0)])),
+        ('nest4', {'y': 3, 'x': 1}),
         ('moarStuff', '!')
     ]
 
-    qs_row = serialize(identifier, timestamp, key_value_pairs_with_none_values)
+    qs_row = serialize(identifier, timestamp, key_value_pairs_with_dict_values)
 
-    assert 'nest3={"key31":bar,"key32":baz},nest4={"x":3},moarStuff=!' in qs_row
+    assert ',nest3={"key31":2.0,"key32":0},nest4={"y":3,"x":1},moarSt' in qs_row
 
 
 def test_each_output_records_ends_with_newline():
