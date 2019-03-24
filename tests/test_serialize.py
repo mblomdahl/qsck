@@ -76,6 +76,7 @@ def test_it_does_the_nested_key_value_formatting_on_root_level_list_values():
     timestamp = datetime.utcnow()
     key_value_pairs_with_list_values = [
         ('howdy', None),
+        ('empty', []),
         ('my_nest', [('sub_key1', 'foo'), ('sk2', 'bar')]),
         ('nest2', [('a', '1')]),
         ('otherStuff', 'ok')
@@ -83,7 +84,7 @@ def test_it_does_the_nested_key_value_formatting_on_root_level_list_values():
 
     qs_row = serialize(identifier, timestamp, key_value_pairs_with_list_values)
 
-    assert ',my_nest={sub_key1=foo, sk2=bar},nest2={a=1},otherStuff=' in qs_row
+    assert ',empty={},my_nest={sub_key1=foo, sk2=bar},nest2={a=1},oth' in qs_row
 
 
 def test_it_does_the_nested_key_value_formatting_on_root_level_dict_values():
@@ -91,14 +92,15 @@ def test_it_does_the_nested_key_value_formatting_on_root_level_dict_values():
     timestamp = datetime.utcnow()
     key_value_pairs_with_dict_values = [
         ('howdy', None),
-        ('nest3', OrderedDict([('key31', 2.0), ('key32', 0)])),
+        ('empty', {}),
+        ('nest3', OrderedDict([('k31', 2.0), ('k32', 0)])),
         ('nest4', {'y': 3, 'x': 1}),
         ('moarStuff', '!')
     ]
 
     qs_row = serialize(identifier, timestamp, key_value_pairs_with_dict_values)
 
-    assert ',nest3={"key31":2.0,"key32":0},nest4={"y":3,"x":1},moarSt' in qs_row
+    assert ',empty={},nest3={"k31":2.0,"k32":0},nest4={"y":3,"x":1},m' in qs_row
 
 
 def test_each_output_records_ends_with_newline():

@@ -5,13 +5,18 @@ qsck
 Python library for serializing and deserializing a wonky format referred to
 as ".qs" files. For full format specification, please read through
 [tests.test_serialize](https://github.com/mblomdahl/qsck/blob/master/tests/test_serialize.py)
-test suite and extrapolate.
+and
+[tests.test_deserialize](https://github.com/mblomdahl/qsck/blob/master/tests/test_deserialize.py)
+test suites and extrapolate.
 
 
 Quick Start
 -----------
 
-**Use Python ≥ 3.6 only.** Install it: `pip3 install qsck`
+**Use Python ≥ 3.6 only.** To install it, simply:
+
+    pip3 install qsck
+
 
 ### Serializing Data
 
@@ -36,6 +41,31 @@ the command-line tool `qs-format`, one record per line:
     qs-format my-records.json > my-records.qs
 
 
+## Deserializing Data
+
+Via Python:
+
+    python3 -c "import pprint, qsck; pprint.pprint(qsck.deserialize(
+        'LOG,1553302923,first_key=some value,2nd_key={attr1=foo, \
+        attr2=bar},3rd_key={\"subKey1\":\"-3\",\"subKey2\":null},4th_key=(null)'))"
+
+
+Out comes a friendly Python collection:
+
+    ('LOG',
+     '1553302923',
+     [('first_key', 'some value'),
+      ('2nd_key', [('attr1', 'foo'), ('attr2', 'bar')]),
+      ('3rd_key', {'subKey1': '-3', 'subKey2': None}),
+      ('4th_key', None)])
+
+
+The library-provided `qs-parse` command-line tool supports deserializing a whole
+".qs" log file, emitting one JSON record per input line to stdout:
+
+    qs-parse my-records.qs > my-records.json 
+
+
 Contributing
 ------------
 
@@ -56,7 +86,12 @@ Distributing:
 Changelog
 ---------
 
-### 0.1 – Initial Release
+### `0.2` – Deserialize Added
+
+Adds support for de-serializing ".qs" records.
+
+
+### `0.1` – Initial Release
 
 Supports serializing ".qs" records.
 

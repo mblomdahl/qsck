@@ -1,4 +1,4 @@
-"""Placeholder module for `qs-format` command-line tool."""
+"""Module providing the `qs-format` command-line tool."""
 
 import click
 import ujson
