@@ -24,7 +24,7 @@ setup(
     entry_points={
         'console_scripts': [
             'qs-parse = qsck.parse_cli:run',
-            'qs-format = qsck.format_cli:run'
+            'qs-format = qsck.format_cli:qs_format'
         ]
     },
     setup_requires=[
