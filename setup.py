@@ -13,7 +13,7 @@ def _read_files_from_root_dir(*file_basenames: [str]) -> str:
 
 setup(
     name='qsck',
-    version='0.2',
+    version='0.3',
     packages=find_packages(include=('qsck',)),
     url='https://github.com/mblomdahl/qsck',
     license='The Unlicense',
@@ -49,5 +49,6 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Quality Assurance'
-    ]
+    ],
+    python_requires='>=3.6'
 )
