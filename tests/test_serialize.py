@@ -111,3 +111,148 @@ def test_each_output_records_ends_with_newline():
     qs_row = serialize(identifier, timestamp, some_key_value_pairs)
 
     assert qs_row.endswith(',theOnly=One\n')
+
+
+def test_it_formats_level2_nested_tuple_content_scenario_1():
+    identifier = 'LOG'
+    timestamp = '1554930014'
+    key_value_pairs = [
+        ('_model', 'SM-N960U'),
+        ('event6_data', 'connectivity'),
+        ('event6_time', '1554907386248'),
+        ('event6_vars', [
+            ('isDocked', 'true'),
+            ('reason', 'radioTurnedOff'),
+            ('networkInfo', [
+                ('type', 'MOBILE[LTE] - MOBILE[LTE]'),
+                ('state', 'DISCONNECTED/DISCONNECTED'),
+                ('roaming', 'false')
+            ]),
+            ('noConnect', 'true'),
+            ('networkType', '0'),
+            ('extraInfo', '')
+        ]),
+        ('fw_inc', 'N960USS1ARJ9'),
+        ('fw_int', '27')
+    ]
+
+    qs_row = serialize(identifier, timestamp, key_value_pairs)
+
+    assert qs_row == (
+        'LOG,1554930014,_model=SM-N960U,event6_data=connectivity,'
+        'event6_time=1554907386248,event6_vars={isDocked=true, '
+        'reason=radioTurnedOff, networkInfo=[type: MOBILE[LTE] - MOBILE[LTE], '
+        'state: DISCONNECTED/DISCONNECTED, roaming: false], noConnect=true, '
+        'networkType=0, extraInfo=},fw_inc=N960USS1ARJ9,fw_int=27\n'
+    )
+
+
+def test_it_formats_level2_nested_tuple_content_scenario_2():
+    identifier = 'LOG'
+    timestamp = '1554930014'
+    key_value_pairs = [
+        ('event6_data', 'connect'),
+        ('event6_time', '1554907386248'),
+        ('event6_vars', [
+            ('networkInfo', [('type', 'MOBILE[LTE]')])
+        ]),
+        ('fw_int', '27')
+    ]
+
+    qs_row = serialize(identifier, timestamp, key_value_pairs)
+
+    assert qs_row == (
+        'LOG,1554930014,event6_data=connect,event6_time=1554907386248,'
+        'event6_vars={networkInfo=[type: MOBILE[LTE]]},fw_int=27\n'
+    )
+
+
+def test_it_formats_level2_nested_tuple_content_scenario_3():
+    identifier = 'LOG'
+    timestamp = '1554930014'
+    key_value_pairs = [
+        ('event6_data', 'connect'),
+        ('event6_time', '1554907386248'),
+        ('event6_vars', [
+            ('networkInfo', [('type', 'MOBILE[LTE]'), ('roaming', 'false')])
+        ])
+    ]
+
+    qs_row = serialize(identifier, timestamp, key_value_pairs)
+
+    assert qs_row == (
+        'LOG,1554930014,event6_data=connect,event6_time=1554907386248,'
+        'event6_vars={networkInfo=[type: MOBILE[LTE], roaming: false]}\n'
+    )
+
+
+def test_it_formats_level2_nested_tuple_content_scenario_4():
+    identifier = 'LOG'
+    timestamp = '1554930014'
+    key_value_pairs = [
+        ('event6_data', 'connect'),
+        ('event6_time', '1554907386248'),
+        ('event6_vars', [
+            ('networkInfo', [('roaming', 'false'),
+                             ('type', 'MOBILE[LTE]'),
+                             ('b', '3')])
+        ])
+    ]
+
+    qs_row = serialize(identifier, timestamp, key_value_pairs)
+
+    assert qs_row == (
+        'LOG,1554930014,event6_data=connect,event6_time=1554907386248,'
+        'event6_vars={networkInfo=[roaming: false, type: MOBILE[LTE], b: 3]}\n'
+    )
+
+
+def test_it_formats_level2_nested_tuple_content_scenario_5():
+    identifier = 'LOG'
+    timestamp = '1554930014'
+    key_value_pairs = [
+        ('event6_data', 'connect'),
+        ('event6_time', '1554907386248'),
+        ('event6_vars', [
+            ('networkInfo', [('roaming', 'false'),
+                             ('network type', '28'),
+                             ('apn type', 'ims,ia,tim,'),
+                             ('subtype', '13')])
+        ])
+    ]
+
+    qs_row = serialize(identifier, timestamp, key_value_pairs)
+
+    assert qs_row == (
+        'LOG,1554930014,event6_data=connect,event6_time=1554907386248,'
+        'event6_vars={networkInfo=[roaming: false, network type: 28, '
+        'apn type: ims,ia,tim,, subtype: 13]}\n'
+    )
+
+
+def test_it_formats_event_data_fields_with_funky_chars_in():
+    identifier = 'LOG'
+    timestamp = '1554930194'
+    key_value_pairs = [
+        ('_model', 'moto z3'),
+        ('display', 'olson_vzw-userdebug 9 PDV29.178 06fda cfg,test-keys'),
+        ('event0_data', 'attract_started_intent'),
+        ('event33_data', 'Played: 92127-01.01.mp3'),
+        ('event33_time', '1554927685047'),
+        ('event34_data', 'Stopped: Sicko Mode (Extra Clean Radio Edit) by '
+                         'Travis Scott Featuring Drake, Juicy J And Swae Lee'),
+        ('event34_time', '1554927722941')
+    ]
+
+    qs_row = serialize(identifier, timestamp, key_value_pairs)
+
+    assert qs_row == (
+        'LOG,1554930194,_model=moto z3,'
+        'display=olson_vzw-userdebug 9 PDV29.178 06fda cfg,test-keys,'
+        'event0_data=attract_started_intent,'
+        'event33_data=Played: 92127-01.01.mp3,'
+        'event33_time=1554927685047,'
+        'event34_data=Stopped: Sicko Mode (Extra Clean Radio Edit) by '
+        'Travis Scott Featuring Drake, Juicy J And Swae Lee,'
+        'event34_time=1554927722941\n'
+    )

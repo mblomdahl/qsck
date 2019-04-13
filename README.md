@@ -86,6 +86,12 @@ Distributing:
 Changelog
 ---------
 
+### `0.3` - Better Deserialization
+
+- Adds support for funky "nested-nested lists" in .qs records
+- Squashing complex comma (`,`) values
+ 
+
 ### `0.2` – Deserialize Added
 
 Adds support for de-serializing ".qs" records.
